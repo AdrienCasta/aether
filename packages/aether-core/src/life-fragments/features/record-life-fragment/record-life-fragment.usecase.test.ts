@@ -1,6 +1,10 @@
-import createRecordLifeFragmentCommand from "../../shared/test/create-record-life-fragment.command"
-import createTestStore from "../../shared/test/create-test-store"
-import { getLifeFragmentListData } from "../list-life-fragment/list-life-fragments.reducer"
+import createRecordLifeFragmentCommand from "../../../shared/test/create-record-life-fragment.command"
+import createTestStore from "../../../shared/test/create-test-store"
+import {
+  getLifeFragmentsListData,
+  lifeFragmentsLoaded,
+  lifeFragmentsStartLoaded,
+} from "../list-life-fragments/list-life-fragments.reducer"
 import RecordLifeFragmentCommand from "./record-life-fragment.command"
 import {
   getLifeFragmentRecordError,
@@ -13,7 +17,8 @@ import { ThunkAction } from "redux-thunk"
 
 import LifeFragmentsLoadingRepositoryFake from "../shared/test/life-fragments-loading.repository"
 import LifeFragmentsSuccessRepositoryFake from "../shared/test/life-fragments-success.repository"
-import { Container, RootState } from "../../shared/application/root.store"
+import { Container, RootState } from "../../../shared/application/root.store"
+import { getNotificationList } from "../../../app/notifications/features/add-notification/add-notification.reducer"
 
 describe("As a user, I want to record a life fragment", () => {
   describe("Given no life fragment is already recorded", () => {
@@ -30,7 +35,7 @@ describe("As a user, I want to record a life fragment", () => {
       expect(getLifeFragmentRecordError(store.getState())).toBeNull()
     })
     test("Then no life fragments exist", () => {
-      expect(getLifeFragmentListData(store.getState()).length).toBe(0)
+      expect(getLifeFragmentsListData(store.getState()).length).toBe(0)
     })
   })
 
@@ -58,21 +63,20 @@ describe("As a user, I want to record a life fragment", () => {
       })
 
       test("Then no life fragment still exist", () => {
-        expect(getLifeFragmentListData(store.getState()).length).toBe(0)
+        expect(getLifeFragmentsListData(store.getState()).length).toBe(0)
       })
     })
   })
 
   describe("Given no life fragment is already recorded", () => {
     let store: Store
-
-    beforeEach(() => {
-      store = createTestStore()
-    })
+    let recordLifeFragmentCommand: RecordLifeFragmentCommand
 
     describe("When life fragment is successfully recorded", () => {
-      beforeEach(() => {
-        recordLifeFragmentUsecase(createRecordLifeFragmentCommand())(
+      beforeAll(() => {
+        recordLifeFragmentCommand = createRecordLifeFragmentCommand()
+        store = createTestStore()
+        recordLifeFragmentUsecase(recordLifeFragmentCommand)(
           store.dispatch,
           store.getState,
           { lifeFragmentsRepository: new LifeFragmentsSuccessRepositoryFake() },
@@ -81,11 +85,21 @@ describe("As a user, I want to record a life fragment", () => {
       test("Then the status should be in success", () => {
         expect(getLifeFragmentRecordStatus(store.getState())).toBe("success")
       })
+      test("Then there should be no error", () => {
+        expect(getLifeFragmentRecordError(store.getState())).toBeNull()
+      })
+      test("Then we are notify", () => {
+        expect(getNotificationList(store.getState())[0].message).toBeDefined()
+      })
+      test("Then the fragment is listed", () => {
+        expect(getLifeFragmentsListData(store.getState())[0].text).toEqual(
+          recordLifeFragmentCommand.text,
+        )
+      })
     })
   })
 })
 
-// type ThunkUsecase<T> = ThunkAction<void, RootState, T, any>
 export type Thunk<ReturnType = Promise<void>> = ThunkAction<
   ReturnType,
   RootState,
@@ -102,5 +116,11 @@ function recordLifeFragmentUsecase(
     await lifeFragmentsRepository.save(recordLifeFragmentcommand)
 
     dispatch(lifeFragmentRecorded())
+
+    dispatch(lifeFragmentsStartLoaded())
+
+    const lifeFragments = await lifeFragmentsRepository.findAll()
+
+    dispatch(lifeFragmentsLoaded(lifeFragments))
   }
 }

@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit"
 import rootReducer from "./root.reducer"
-import LifeFragmentsRepository from "../../features/shared/life-fragments.repository"
-import LifeFragmentsInMemoryRepository from "../../features/shared/infrascture/life-fragments.in-memory-repository"
+import LifeFragmentsRepository from "../../life-fragments/features/shared/life-fragments.repository"
+import LifeFragmentsInMemoryRepository from "../../life-fragments/features/shared/infrastructure/life-fragments.in-memory-repository"
 
 const rootStore = configureStore({
   reducer: rootReducer,

@@ -1,10 +1,10 @@
-type LifeFragmentModel = {
+type LifeFragmentEntity = {
   id: string
   text: string
   type: "emotion" | "thought" | "event" | "action"
-  date?: Date
+  date?: string
   intensity?: number
   tags?: string[]
 }
 
-export default LifeFragmentModel
+export default LifeFragmentEntity

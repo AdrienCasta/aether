@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto"
-import LifeFragmentsRepository from "../life-fragments.repository"
-import RecordLifeFragmentcommand from "../../record-life-fragment/record-life-fragment.command"
-import LifeFragmentModel from "../life-fragment.model"
+import RecordLifeFragmentcommand from "../record-life-fragment.command"
+import LifeFragmentsRepository from "../../shared/life-fragments.repository"
+import LifeFragmentEntity from "../../shared/life-fragment.entity"
 
 class LifeFragmentsSuccessRepositoryFake implements LifeFragmentsRepository {
-  private lifeFragments: LifeFragmentModel[] = []
+  private lifeFragments: LifeFragmentEntity[] = []
   async save(
     recordLifeFragmentCommand: RecordLifeFragmentcommand,
   ): Promise<void> {
@@ -12,6 +12,9 @@ class LifeFragmentsSuccessRepositoryFake implements LifeFragmentsRepository {
       id: randomUUID(),
       ...recordLifeFragmentCommand,
     })
+  }
+  async findAll(): Promise<LifeFragmentEntity[]> {
+    return this.lifeFragments
   }
 }
 

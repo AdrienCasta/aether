@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto"
 import RecordLifeFragmentcommand from "../../record-life-fragment/record-life-fragment.command"
-import LifeFragmentModel from "../life-fragment.model"
+import LifeFragmentEntity from "../life-fragment.entity"
 import LifeFragmentsRepository from "../life-fragments.repository"
 
 class LifeFragmentsInMemoryRepository implements LifeFragmentsRepository {
-  private lifeFragments: LifeFragmentModel[] = []
+  private lifeFragments: LifeFragmentEntity[] = []
   async save(recordLifeFragmentCommand: RecordLifeFragmentcommand) {
     this.lifeFragments.push({
       id: randomUUID(),

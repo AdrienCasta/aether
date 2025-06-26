@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker"
-import RecordLifeFragmentcommand from "../../features/record-life-fragment/record-life-fragment.command"
+import RecordLifeFragmentcommand from "../../life-fragments/features/record-life-fragment/record-life-fragment.command"
 
 const createRecordLifeFragmentCommand = (
   recordLifeFragmentCommand?: Partial<RecordLifeFragmentcommand>,

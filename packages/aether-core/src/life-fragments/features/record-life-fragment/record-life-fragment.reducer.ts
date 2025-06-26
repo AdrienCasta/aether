@@ -1,5 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit"
-import { RootState } from "../../shared/application/root.store"
+import { RootState } from "../../../shared/application/root.store"
 
 type LifeFragmentStateModel = {
   status: "idle" | "loading" | "success"
