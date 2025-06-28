@@ -5,7 +5,7 @@ const createRecordLifeFragmentCommand = (
   recordLifeFragmentCommand?: Partial<RecordLifeFragmentcommand>,
 ): RecordLifeFragmentcommand => {
   return {
-    text: faker.lorem.sentence(),
+    description: faker.lorem.sentence(),
     type: faker.helpers.arrayElement(["emotion", "thought", "action", "event"]),
     date: faker.helpers.maybe(() => faker.date.recent()),
     intensity: faker.helpers.maybe(() =>

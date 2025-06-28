@@ -1,6 +1,6 @@
 type LifeFragmentEntity = {
   id: string
-  text: string
+  description: string
   type: "emotion" | "thought" | "event" | "action"
   date?: string
   intensity?: number

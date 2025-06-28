@@ -1,5 +1,5 @@
 type RecordLifeFragmentcommand = {
-  text: string
+  description: string
   type: "emotion" | "thought" | "event" | "action"
   date?: Date
   intensity?: number

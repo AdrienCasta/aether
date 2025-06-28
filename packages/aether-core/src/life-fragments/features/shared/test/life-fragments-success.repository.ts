@@ -15,6 +15,7 @@ class LifeFragmentsSuccessRepositoryFake implements LifeFragmentsRepository {
     this.lifeFragments.push({
       id: randomUUID(),
       ...recordLifeFragmentCommand,
+      date: recordLifeFragmentCommand.date?.toISOString(),
     })
   }
 }

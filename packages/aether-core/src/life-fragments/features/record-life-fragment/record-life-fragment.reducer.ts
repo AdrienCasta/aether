@@ -1,9 +1,14 @@
 import { createAction, createReducer } from "@reduxjs/toolkit"
 import { RootState } from "../../../shared/application/root.store"
+import ApplicationError from "../../../shared/application/application-error"
+import { InfrastructureError } from "../../../shared/infrastructure/infrastructure-error"
 
 type LifeFragmentStateModel = {
-  status: "idle" | "loading" | "success"
-  error: null
+  status: "idle" | "loading" | "success" | "error"
+  error: {
+    type: ApplicationError["name"] | InfrastructureError["name"]
+    message: string
+  } | null
 }
 
 export const lifeFragmentRecordStarted = createAction(
@@ -11,6 +16,10 @@ export const lifeFragmentRecordStarted = createAction(
 )
 
 export const lifeFragmentRecorded = createAction("LIFE_FRAGMENT_RECORDED")
+
+export const lifeFragmentRecordFailed = createAction<
+  ApplicationError | InfrastructureError
+>("LIFE_FRAGMENT_RECORD_FAILED")
 
 const recordLifeFragmentInitialState: LifeFragmentStateModel = {
   status: "idle",
@@ -27,6 +36,13 @@ const recordLifeFragmentReducer = createReducer(
       .addCase(lifeFragmentRecorded, state => {
         state.status = "success"
         state.error = null
+      })
+      .addCase(lifeFragmentRecordFailed, (state, { payload }) => {
+        state.status = "error"
+        state.error = {
+          type: payload.name,
+          message: payload.message,
+        }
       })
   },
 )
